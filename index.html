@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Painel Inteligente XAUUSD</title>
+  <title>Live XAUUSD Panel</title>
   <style>
     body {
       margin: 0;
@@ -75,42 +75,42 @@
 </head>
 <body>
 
-  <h1>Painel Inteligente XAUUSD</h1>
-  <div class="subtitle">Análise ao vivo do ouro com IA — dados, suporte/resistência e sugestões de trade</div>
+  <h1>Live XAUUSD Panel</h1>
+  <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — data, support/resistance, and trade suggestions</div>
 
-  <!-- Gráfico do TradingView -->
-  <iframe src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?locale=br#%7B%22symbol%22%3A%22OANDA%3AXAUUSD%22%2C%22width%22%3A%22960%22%2C%22height%22%3A%22400%22%2C%22locale%22%3A%22br%22%2C%22dateRange%22%3A%22D%22%2C%22colorTheme%22%3A%22dark%22%2C%22isTransparent%22%3Afalse%7D" allowtransparency="true" scrolling="no"></iframe>
+  <!-- TradingView Chart (Candles) -->
+  <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_34f13&symbol=OANDA%3AXAUUSD&interval=240&hidesidetoolbar=1&theme=dark&style=1&timezone=America%2FSao_Paulo&studies=%5B%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
 
-  <!-- Assistente IA -->
+  <!-- AI Assistant -->
   <div class="assistente-container">
-    <div class="assistente-title">Comentário da Assistente IA</div>
-    <div id="mensagem" class="mensagem">Carregando análise...</div>
+    <div class="assistente-title">AI Assistant Commentary</div>
+    <div id="mensagem" class="mensagem">Loading analysis...</div>
   </div>
 
   <footer>
-    Desenvolvido por PunkerFX — IA & TradingView © 2025
+    Developed by PunkerFX — AI & TradingView © 2025
   </footer>
 
   <script>
-    const mensagens = [
-      "Bom dia! O XAUUSD inicia com leve alta, impulsionado por tensões geopolíticas. Suporte chave em 2312 e resistência forte em 2330.",
-      "Dados do Payroll hoje às 9h30 (Brasília). Volatilidade esperada. Atenção para rompimento da zona 2332.",
-      "O RSI em H1 mostra sobrecompra leve, podendo indicar correção até 2318 antes de nova alta.",
-      "Sinais de fluxo institucional apontam compras defendidas em 2320. Viés altista no curto prazo.",
-      "Sugestão de trade: Entrada em 2321, stop 2315, alvo 2334 (risco:recompensa 1:2).",
-      "10Y Treasury yields caindo, favorecendo ativos de proteção como ouro.",
-      "DXY recuando após dados de inflação. Isso pode impulsionar o XAUUSD nas próximas horas.",
-      "Alta no VIX sinaliza aversão ao risco — cenário de suporte para o ouro."
+    const messages = [
+      "Good morning! XAUUSD starts with a slight bullish trend, driven by geopolitical tensions. Key support at 2312 and strong resistance at 2330.",
+      "Payroll data will be released at 9:30 AM (Brazil time). Expect high volatility. Watch for breakout at 2332 zone.",
+      "RSI on H1 shows slight overbought conditions, indicating a potential pullback to 2318 before further upward movement.",
+      "Institutional flow signals buying at 2320. Bullish bias for the short term.",
+      "Trade suggestion: Entry at 2321, stop at 2315, target 2334 (risk-to-reward ratio 1:2).",
+      "10Y Treasury yields are dropping, favoring safe-haven assets like gold.",
+      "DXY is pulling back after inflation data. This may push XAUUSD higher in the next few hours.",
+      "Rising VIX signals risk aversion — a supportive scenario for gold."
     ];
 
-    function atualizarMensagem() {
-      const index = Math.floor(Math.random() * mensagens.length);
-      const mensagemDiv = document.getElementById("mensagem");
-      mensagemDiv.innerText = mensagens[index];
+    function updateMessage() {
+      const index = Math.floor(Math.random() * messages.length);
+      const messageDiv = document.getElementById("mensagem");
+      messageDiv.innerText = messages[index];
     }
 
-    atualizarMensagem();
-    setInterval(atualizarMensagem, 5 * 60 * 1000); // a cada 5 minutos
+    updateMessage();
+    setInterval(updateMessage, 5 * 60 * 1000); // every 5 minutes
   </script>
 
 </body>
