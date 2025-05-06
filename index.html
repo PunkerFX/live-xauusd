@@ -70,33 +70,34 @@
       line-height: 1.5;
     }
 
-    .countdown-container {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 30px;
-      width: 100%;
-      max-width: 960px;
+    .market-status {
+      margin-top: 20px;
       font-size: 18px;
+      color: #f00;
     }
 
     .countdown {
       display: flex;
       align-items: center;
-      font-size: 20px;
-      color: #f0f0f0;
+      justify-content: center;
+      font-size: 22px;
+      color: #f1f1f1;
+      font-weight: bold;
     }
 
-    .countdown-icon {
+    .market-flag {
+      width: 40px;
+      height: 30px;
       margin-right: 10px;
-      width: 25px;
-      height: 25px;
-      background-size: cover;
+      border-radius: 5px;
     }
 
-    footer {
+    .economical-calendar {
       margin-top: 20px;
       font-size: 14px;
-      color: #555;
+      color: #aaa;
+      width: 100%;
+      max-width: 960px;
     }
 
     @keyframes fadein {
@@ -110,7 +111,7 @@
   <h1>Live XAUUSD Panel</h1>
   <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — macro data, liquidity zones, and market insights</div>
 
-  <!-- TradingView Chart using OANDA symbol -->
+  <!-- TradingView Chart with Supply & Demand Zones -->
   <iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&studies=%5B%22SupportResistance%40tv-basicstudies%22%2C%22AccumulationDistribution%40tv-basicstudies%22%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
 
   <!-- AI Assistant -->
@@ -119,26 +120,26 @@
     <div id="mensagem" class="mensagem">Loading analysis...</div>
   </div>
 
+  <!-- Market Status and Countdown -->
+  <div class="market-status">
+    <div id="marketStatus">Waiting for market open...</div>
+    <div id="countdown" class="countdown">
+      <img id="londonFlag" class="market-flag" src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_Kingdom.svg" alt="London Flag">
+      <span id="countdownTimer">00:00:00</span>
+    </div>
+  </div>
+
+  <!-- Economic Calendar -->
+  <div class="economical-calendar" id="economicCalendar">
+    <h3>Economic Calendar for Today</h3>
+    <!-- Insert API for Economic Calendar here -->
+    <div>Loading events...</div>
+  </div>
+
   <!-- Disclaimer -->
   <div class="disclaimer">
     Disclaimer: This project is for educational purposes only. It does not constitute financial advice or trading signals. <br />
     All users are responsible for their own investment decisions. The creator assumes no liability for any financial loss.
-  </div>
-
-  <!-- Countdown Container -->
-  <div class="countdown-container">
-    <div class="countdown">
-      <div class="countdown-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/68/Flag_of_Japan.svg');"></div>
-      <span id="asia-countdown">Asia Market Opening: 12:00 AM UTC</span>
-    </div>
-    <div class="countdown">
-      <div class="countdown-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/5f/Flag_of_the_United_Kingdom.svg');"></div>
-      <span id="europe-countdown">Europe Market Opening: 7:00 AM UTC</span>
-    </div>
-    <div class="countdown">
-      <div class="countdown-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');"></div>
-      <span id="us-countdown">US Market Opening: 2:30 PM UTC</span>
-    </div>
   </div>
 
   <footer>
@@ -146,7 +147,6 @@
   </footer>
 
   <script>
-    // AI Assistant Message
     const messages = [
       "Good morning! XAUUSD is trading near a major liquidity zone around 2320.",
       "Accumulation zones detected between 2312 and 2318 — high institutional interest.",
@@ -163,34 +163,40 @@
       document.getElementById("mensagem").innerText = messages[index];
     }
 
-    updateMessage();
-    setInterval(updateMessage, 5 * 60 * 1000);
+    // Countdown Timer for Market Open
+    const marketTimes = {
+      london: "2025-05-06T08:00:00Z", // Example time for London market
+      tokyo: "2025-05-06T00:00:00Z", // Example time for Tokyo market
+      newYork: "2025-05-06T13:00:00Z", // Example time for New York market
+    };
 
-    // Countdown Function
-    function countdownToMarketOpen(targetDate, targetId) {
-      const countdownElement = document.getElementById(targetId);
-      const countDownDate = new Date(targetDate).getTime();
+    let marketStatus = "closed";
 
-      const interval = setInterval(() => {
-        const now = new Date().getTime();
-        const distance = countDownDate - now;
+    function updateCountdown() {
+      let marketTime = marketTimes.london; // You can switch this dynamically based on market
+      let now = new Date();
+      let targetTime = new Date(marketTime);
+      let diff = targetTime - now;
 
-        if (distance < 0) {
-          clearInterval(interval);
-          countdownElement.innerHTML = "Market Open!";
-        } else {
-          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-          countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
-        }
-      }, 1000);
+      let hours = Math.floor(diff / (1000 * 60 * 60));
+      let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("countdownTimer").innerText = `${hours}:${minutes}:${seconds}`;
+
+      if (diff <= 0) {
+        marketStatus = "open";
+        document.getElementById("marketStatus").innerText = "Market Open";
+        document.getElementById("marketStatus").style.color = "green";
+      } else {
+        document.getElementById("marketStatus").innerText = "Waiting for market open...";
+        document.getElementById("marketStatus").style.color = "red";
+      }
     }
 
-    // Market Open Times
-    countdownToMarketOpen("2025-05-07T00:00:00Z", "asia-countdown");  // Asia Market
-    countdownToMarketOpen("2025-05-07T07:00:00Z", "europe-countdown");  // Europe Market
-    countdownToMarketOpen("2025-05-07T14:30:00Z", "us-countdown");  // US Market
+    setInterval(updateCountdown, 1000);
+    updateMessage();
+    setInterval(updateMessage, 5 * 60 * 1000);
   </script>
 
 </body>
