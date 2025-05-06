@@ -76,22 +76,6 @@
       color: #f00;
     }
 
-    .countdown {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      color: #f1f1f1;
-      font-weight: bold;
-    }
-
-    .market-flag {
-      width: 40px;
-      height: 30px;
-      margin-right: 10px;
-      border-radius: 5px;
-    }
-
     .economical-calendar {
       margin-top: 20px;
       font-size: 14px;
@@ -120,15 +104,6 @@
     <div id="mensagem" class="mensagem">Loading analysis...</div>
   </div>
 
-  <!-- Market Status and Countdown -->
-  <div class="market-status">
-    <div id="marketStatus">Waiting for market open...</div>
-    <div id="countdown" class="countdown">
-      <img id="londonFlag" class="market-flag" src="https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_Kingdom.svg" alt="London Flag">
-      <span id="countdownTimer">00:00:00</span>
-    </div>
-  </div>
-
   <!-- Economic Calendar -->
   <div class="economical-calendar" id="economicCalendar">
     <h3>Economic Calendar for Today</h3>
@@ -147,23 +122,6 @@
   </footer>
 
   <script>
-    const messages = [
-      "Good morning! XAUUSD is trading near a major liquidity zone around 2320.",
-      "Accumulation zones detected between 2312 and 2318 — high institutional interest.",
-      "Resistance ahead near 2335, watch for potential fakeouts.",
-      "Strong DXY movement may impact gold direction today — monitor carefully.",
-      "Upcoming economic data could increase volatility on XAUUSD.",
-      "Volume divergence forming — possible reversal setup in progress.",
-      "Liquidity vacuum below 2310 — price could accelerate if it breaks down.",
-      "Gold correlates inversely with bond yields — 10Y treasury movement is key today."
-    ];
-
-    function updateMessage() {
-      const index = Math.floor(Math.random() * messages.length);
-      document.getElementById("mensagem").innerText = messages[index];
-    }
-
-    // Countdown Timer for Market Open
     const marketTimes = {
       london: "2025-05-06T08:00:00Z", // Example time for London market
       tokyo: "2025-05-06T00:00:00Z", // Example time for Tokyo market
@@ -172,29 +130,60 @@
 
     let marketStatus = "closed";
 
-    function updateCountdown() {
-      let marketTime = marketTimes.london; // You can switch this dynamically based on market
-      let now = new Date();
-      let targetTime = new Date(marketTime);
-      let diff = targetTime - now;
+    function updateMessage() {
+      // AI Assistant's analysis
+      const messages = [
+        "Analyzing XAUUSD... check the 15m, 1h, and 4h charts for better insights.",
+        "Liquidity zones forming near 2310 — watch for potential movement!",
+        "Strong resistance at 2335 — important level to monitor.",
+        "Market sentiment is mixed due to USD fluctuations.",
+        "Watch for breakout patterns on the 4h chart, key support at 2310."
+      ];
 
-      let hours = Math.floor(diff / (1000 * 60 * 60));
-      let minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      const index = Math.floor(Math.random() * messages.length);
+      document.getElementById("mensagem").innerText = messages[index];
+    }
 
-      document.getElementById("countdownTimer").innerText = `${hours}:${minutes}:${seconds}`;
-
+    // Market Open Alert (Tóquio, Londres, Nova York)
+    function marketAlert(time, market) {
+      const now = new Date();
+      const targetTime = new Date(time);
+      const diff = targetTime - now;
+      
       if (diff <= 0) {
-        marketStatus = "open";
-        document.getElementById("marketStatus").innerText = "Market Open";
-        document.getElementById("marketStatus").style.color = "green";
-      } else {
-        document.getElementById("marketStatus").innerText = "Waiting for market open...";
-        document.getElementById("marketStatus").style.color = "red";
+        document.getElementById("mensagem").innerText = `Market ${market} is now OPEN!`;
+        return;
+      }
+
+      const alertTimes = [15, 10, 5, 1];
+      for (let t of alertTimes) {
+        if (diff <= t * 60 * 1000) {
+          document.getElementById("mensagem").innerText = `Market ${market} will open in ${t} minute(s).`;
+        }
       }
     }
 
+    function updateCountdown() {
+      marketAlert(marketTimes.london, "London");
+      marketAlert(marketTimes.tokyo, "Tokyo");
+      marketAlert(marketTimes.newYork, "New York");
+    }
+
     setInterval(updateCountdown, 1000);
+
+    // Automatically Add Alerts on TradingView Chart
+    function addAlertToChart(alertMessage, timeFrame) {
+      const chart = document.querySelector('iframe');
+      const tradingViewURL = chart.src;
+      const alertCode = `alert(${alertMessage})`;
+      
+      // This is where you would call TradingView's scripting capabilities
+      console.log(`Adding alert to TradingView Chart with message: "${alertMessage}" and on time frame: ${timeFrame}`);
+      
+      // The actual TradingView API integration would go here (not supported directly in iframe)
+    }
+
+    // Run the AI message update every 5 minutes
     updateMessage();
     setInterval(updateMessage, 5 * 60 * 1000);
   </script>
