@@ -61,13 +61,22 @@
       animation: fadein 0.6s ease-in-out;
     }
 
+    .disclaimer {
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+      margin-top: 40px;
+      max-width: 960px;
+      line-height: 1.5;
+    }
+
     @keyframes fadein {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     footer {
-      margin-top: 40px;
+      margin-top: 20px;
       font-size: 14px;
       color: #555;
     }
@@ -76,15 +85,21 @@
 <body>
 
   <h1>Live XAUUSD Panel</h1>
-  <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — data, support/resistance, and trade suggestions</div>
+  <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — data, liquidity zones, and trade suggestions</div>
 
-  <!-- TradingView Chart (Candles) -->
-  <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_34f13&symbol=OANDA%3AXAUUSD&interval=240&hidesidetoolbar=1&theme=dark&style=1&timezone=America%2FSao_Paulo&studies=%5B%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
+  <!-- TradingView Chart from VantageMarkets with liquidity zones -->
+  <iframe src="https://s.tradingview.com/widgetembed/?symbol=VANTAGEMARKETS:XAUUSD&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&studies=%5B%22SupportResistance%40tv-basicstudies%22%2C%22AccumulationDistribution%40tv-basicstudies%22%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
 
   <!-- AI Assistant -->
   <div class="assistente-container">
     <div class="assistente-title">AI Assistant Commentary</div>
     <div id="mensagem" class="mensagem">Loading analysis...</div>
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    Disclaimer: This project is for educational purposes only. It does not constitute financial advice or trading signals. <br />
+    All users are responsible for their own investment decisions. The creator assumes no liability for any financial loss.
   </div>
 
   <footer>
@@ -93,24 +108,23 @@
 
   <script>
     const messages = [
-      "Good morning! XAUUSD starts with a slight bullish trend, driven by geopolitical tensions. Key support at 2312 and strong resistance at 2330.",
-      "Payroll data will be released at 9:30 AM (Brazil time). Expect high volatility. Watch for breakout at 2332 zone.",
-      "RSI on H1 shows slight overbought conditions, indicating a potential pullback to 2318 before further upward movement.",
-      "Institutional flow signals buying at 2320. Bullish bias for the short term.",
-      "Trade suggestion: Entry at 2321, stop at 2315, target 2334 (risk-to-reward ratio 1:2).",
-      "10Y Treasury yields are dropping, favoring safe-haven assets like gold.",
-      "DXY is pulling back after inflation data. This may push XAUUSD higher in the next few hours.",
-      "Rising VIX signals risk aversion — a supportive scenario for gold."
+      "Good morning! XAUUSD opens above the 2320 liquidity pocket. Key resistance at 2332.",
+      "Institutional flow suggests accumulation between 2312 and 2318 — strong buy zone.",
+      "Major liquidity trap detected around 2335 — expect false breakouts and volatility.",
+      "If price holds above 2325, bullish continuation likely toward 2340.",
+      "Trade idea: Long at 2321, SL 2315, TP 2336. High RR setup.",
+      "Watch out for economic news at 13:30 UTC. Gold reacts strongly to NFP and CPI data.",
+      "Liquidity void below 2310. In case of breakout, price may drop quickly to 2298.",
+      "DXY divergence forming — may signal bullish opportunity for XAUUSD soon."
     ];
 
     function updateMessage() {
       const index = Math.floor(Math.random() * messages.length);
-      const messageDiv = document.getElementById("mensagem");
-      messageDiv.innerText = messages[index];
+      document.getElementById("mensagem").innerText = messages[index];
     }
 
     updateMessage();
-    setInterval(updateMessage, 5 * 60 * 1000); // every 5 minutes
+    setInterval(updateMessage, 5 * 60 * 1000);
   </script>
 
 </body>
