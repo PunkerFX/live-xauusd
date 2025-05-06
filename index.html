@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live XAUUSD</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    #container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    #grafico {
+      flex: 7;
+    }
+    #dados {
+      flex: 3;
+      padding: 10px;
+      background-color: #111;
+    }
+    #preco {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    #comentario {
+      font-size: 1.2em;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="grafico">
+      <!-- Widget do gráfico TradingView -->
+      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_b6b44&symbol=OANDA:XAUUSD&interval=1&hidesidetoolbar=1&symboledit=0&saveimage=0&toolbarbg=f1f3f6&studies=[]&theme=dark&style=1&timezone=Etc%2FUTC&withdateranges=1&hidevolume=0&hideideas=1&studies_overrides={}&overrides={}" 
+        width="100%" height="100%" frameborder="0" allowtransparency="true" scrolling="no"></iframe>
+    </div>
+    <div id="dados">
+      <div id="preco">Carregando preço...</div>
+      <div id="comentario">Análise inicial em breve...</div>
+    </div>
+  </div>
+
+  <script>
+    async function atualizarDados() {
+      try {
+        const response = await fetch('https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=XAU&to_currency=USD&apikey=J2DVOTQ4FZJ5V1L1');
+        const data = await response.json();
+        const preco = parseFloat(data['Realtime Currency Exchange Rate']['5. Exchange Rate']).toFixed(2);
+        document.getElementById('preco').textContent = `Preço atual do ouro: $${preco}`;
+
+        // Comentário automático (simples, com base no preço)
+        let comentario = '';
+        if (preco > 2350) {
+          comentario = 'Tendência altista forte. Rompimento recente acima dos $2350.';
+        } else if (preco < 2300) {
+          comentario = 'Possível pressão vendedora abaixo dos $2300.';
+        } else {
+          comentario = 'Movimento lateral entre $2300 e $2350.';
+        }
+        document.getElementById('comentario').textContent = comentario;
+
+      } catch (error) {
+        document.getElementById('preco').textContent = 'Erro ao carregar o preço';
+        document.getElementById('comentario').textContent = '';
+      }
+    }
+
+    atualizarDados();
+    setInterval(atualizarDados, 180000); // Atualiza a cada 3 minutos
+  </script>
+</body>
+</html>
