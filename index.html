@@ -70,9 +70,27 @@
       line-height: 1.5;
     }
 
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .countdown-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+      width: 100%;
+      max-width: 960px;
+      font-size: 18px;
+    }
+
+    .countdown {
+      display: flex;
+      align-items: center;
+      font-size: 20px;
+      color: #f0f0f0;
+    }
+
+    .countdown-icon {
+      margin-right: 10px;
+      width: 25px;
+      height: 25px;
+      background-size: cover;
     }
 
     footer {
@@ -80,15 +98,20 @@
       font-size: 14px;
       color: #555;
     }
+
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
 
   <h1>Live XAUUSD Panel</h1>
-  <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — data, liquidity zones, and trade suggestions</div>
+  <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — macro data, liquidity zones, and market insights</div>
 
-  <!-- TradingView Chart from VantageMarkets with liquidity zones -->
-  <iframe src="https://s.tradingview.com/widgetembed/?symbol=VANTAGEMARKETS:XAUUSD&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&studies=%5B%22SupportResistance%40tv-basicstudies%22%2C%22AccumulationDistribution%40tv-basicstudies%22%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
+  <!-- TradingView Chart using OANDA symbol -->
+  <iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&studies=%5B%22SupportResistance%40tv-basicstudies%22%2C%22AccumulationDistribution%40tv-basicstudies%22%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
 
   <!-- AI Assistant -->
   <div class="assistente-container">
@@ -102,20 +125,37 @@
     All users are responsible for their own investment decisions. The creator assumes no liability for any financial loss.
   </div>
 
+  <!-- Countdown Container -->
+  <div class="countdown-container">
+    <div class="countdown">
+      <div class="countdown-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/68/Flag_of_Japan.svg');"></div>
+      <span id="asia-countdown">Asia Market Opening: 12:00 AM UTC</span>
+    </div>
+    <div class="countdown">
+      <div class="countdown-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/5/5f/Flag_of_the_United_Kingdom.svg');"></div>
+      <span id="europe-countdown">Europe Market Opening: 7:00 AM UTC</span>
+    </div>
+    <div class="countdown">
+      <div class="countdown-icon" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a4/Flag_of_the_United_States.svg');"></div>
+      <span id="us-countdown">US Market Opening: 2:30 PM UTC</span>
+    </div>
+  </div>
+
   <footer>
     Developed by PunkerFX — AI & TradingView © 2025
   </footer>
 
   <script>
+    // AI Assistant Message
     const messages = [
-      "Good morning! XAUUSD opens above the 2320 liquidity pocket. Key resistance at 2332.",
-      "Institutional flow suggests accumulation between 2312 and 2318 — strong buy zone.",
-      "Major liquidity trap detected around 2335 — expect false breakouts and volatility.",
-      "If price holds above 2325, bullish continuation likely toward 2340.",
-      "Trade idea: Long at 2321, SL 2315, TP 2336. High RR setup.",
-      "Watch out for economic news at 13:30 UTC. Gold reacts strongly to NFP and CPI data.",
-      "Liquidity void below 2310. In case of breakout, price may drop quickly to 2298.",
-      "DXY divergence forming — may signal bullish opportunity for XAUUSD soon."
+      "Good morning! XAUUSD is trading near a major liquidity zone around 2320.",
+      "Accumulation zones detected between 2312 and 2318 — high institutional interest.",
+      "Resistance ahead near 2335, watch for potential fakeouts.",
+      "Strong DXY movement may impact gold direction today — monitor carefully.",
+      "Upcoming economic data could increase volatility on XAUUSD.",
+      "Volume divergence forming — possible reversal setup in progress.",
+      "Liquidity vacuum below 2310 — price could accelerate if it breaks down.",
+      "Gold correlates inversely with bond yields — 10Y treasury movement is key today."
     ];
 
     function updateMessage() {
@@ -125,6 +165,32 @@
 
     updateMessage();
     setInterval(updateMessage, 5 * 60 * 1000);
+
+    // Countdown Function
+    function countdownToMarketOpen(targetDate, targetId) {
+      const countdownElement = document.getElementById(targetId);
+      const countDownDate = new Date(targetDate).getTime();
+
+      const interval = setInterval(() => {
+        const now = new Date().getTime();
+        const distance = countDownDate - now;
+
+        if (distance < 0) {
+          clearInterval(interval);
+          countdownElement.innerHTML = "Market Open!";
+        } else {
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+          countdownElement.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+        }
+      }, 1000);
+    }
+
+    // Market Open Times
+    countdownToMarketOpen("2025-05-07T00:00:00Z", "asia-countdown");  // Asia Market
+    countdownToMarketOpen("2025-05-07T07:00:00Z", "europe-countdown");  // Europe Market
+    countdownToMarketOpen("2025-05-07T14:30:00Z", "us-countdown");  // US Market
   </script>
 
 </body>
