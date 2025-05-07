@@ -3,190 +3,161 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Live XAUUSD Panel</title>
+  <title>XAUUSD Live Assistant</title>
   <style>
     body {
       margin: 0;
-      background: #0f0f0f;
       font-family: 'Segoe UI', sans-serif;
-      color: #f1f1f1;
+      background-color: #0e1117;
+      color: #ffffff;
+    }
+    .header {
+      background-color: #161b22;
+      padding: 10px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      border-bottom: 1px solid #30363d;
+    }
+    .header div {
+      text-align: center;
+    }
+    .main {
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 20px;
+      gap: 20px;
     }
-
-    h1 {
-      color: gold;
-      font-size: 32px;
-      margin-bottom: 10px;
+    .card {
+      background-color: #1c2128;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #30363d;
     }
-
-    .subtitle {
-      color: #ccc;
-      font-size: 16px;
-      margin-bottom: 30px;
+    .calendar-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #30363d;
     }
-
     iframe {
-      width: 100%;
-      max-width: 960px;
-      height: 500px;
+      border-radius: 8px;
       border: none;
-      border-radius: 10px;
-      box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
-      margin-bottom: 40px;
-    }
-
-    .assistente-container {
-      background-color: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      padding: 20px;
-      max-width: 960px;
-      width: 100%;
-      box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);
-    }
-
-    .assistente-title {
-      font-size: 20px;
-      margin-bottom: 15px;
-      color: #ffcc00;
-    }
-
-    .mensagem {
-      font-size: 16px;
-      line-height: 1.5;
-      color: #eee;
-      animation: fadein 0.6s ease-in-out;
-    }
-
-    .disclaimer {
-      font-size: 13px;
-      color: #888;
-      text-align: center;
-      margin-top: 40px;
-      max-width: 960px;
-      line-height: 1.5;
-    }
-
-    .market-status {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #f00;
-    }
-
-    .economical-calendar {
-      margin-top: 20px;
-      font-size: 14px;
-      color: #aaa;
-      width: 100%;
-      max-width: 960px;
-    }
-
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-
-  <h1>Live XAUUSD Panel</h1>
-  <div class="subtitle">Live analysis of Gold (XAUUSD) with AI — macro data, liquidity zones, and market insights</div>
-
-  <!-- TradingView Chart with Supply & Demand Zones -->
-  <iframe src="https://s.tradingview.com/widgetembed/?symbol=OANDA:XAUUSD&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc%2FUTC&studies=%5B%22SupportResistance%40tv-basicstudies%22%2C%22AccumulationDistribution%40tv-basicstudies%22%5D&hideideas=1" allowtransparency="true" scrolling="no"></iframe>
-
-  <!-- AI Assistant -->
-  <div class="assistente-container">
-    <div class="assistente-title">AI Assistant Commentary</div>
-    <div id="mensagem" class="mensagem">Loading analysis...</div>
+  <div class="header">
+    <div>
+      <div><strong>Price</strong></div>
+      <div id="price">Loading...</div>
+    </div>
+    <div>
+      <div><strong>Trend</strong></div>
+      <div id="trend">Analyzing...</div>
+    </div>
+    <div>
+      <div><strong>Last Macro Event</strong></div>
+      <div id="macro">Loading...</div>
+    </div>
+    <div>
+      <div><strong>Market Status</strong></div>
+      <div id="markets">Checking...</div>
+    </div>
   </div>
 
-  <!-- Economic Calendar -->
-  <div class="economical-calendar" id="economicCalendar">
-    <h3>Economic Calendar for Today</h3>
-    <!-- Insert API for Economic Calendar here -->
-    <div>Loading events...</div>
-  </div>
+  <div class="main">
+    <div class="card">
+      <h2>Live XAUUSD Chart</h2>
+      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_12345&symbol=OANDA:XAUUSD&interval=15&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc/UTC&withdateranges=1&hideideas=1&studies=[]" width="100%" height="500" allowtransparency="true"></iframe>
+    </div>
 
-  <!-- Disclaimer -->
-  <div class="disclaimer">
-    Disclaimer: This project is for educational purposes only. It does not constitute financial advice or trading signals. <br />
-    All users are responsible for their own investment decisions. The creator assumes no liability for any financial loss.
-  </div>
+    <div class="card">
+      <h2>Today's Economic Calendar</h2>
+      <div id="calendar">
+        <div class="calendar-item"><div>Loading...</div></div>
+      </div>
+    </div>
 
-  <footer>
-    Developed by PunkerFX — AI & TradingView © 2025
-  </footer>
+    <div class="card">
+      <h2>AI Assistant Commentary</h2>
+      <div id="ai-comments">Waiting for live macroeconomic events...</div>
+    </div>
+  </div>
 
   <script>
-    const marketTimes = {
-      london: "2025-05-06T08:00:00Z", // Example time for London market
-      tokyo: "2025-05-06T00:00:00Z", // Example time for Tokyo market
-      newYork: "2025-05-06T13:00:00Z", // Example time for New York market
-    };
+    const apiKey = "063169H1FSHUHWA2";
 
-    let marketStatus = "closed";
-
-    function updateMessage() {
-      // AI Assistant's analysis
-      const messages = [
-        "Analyzing XAUUSD... check the 15m, 1h, and 4h charts for better insights.",
-        "Liquidity zones forming near 2310 — watch for potential movement!",
-        "Strong resistance at 2335 — important level to monitor.",
-        "Market sentiment is mixed due to USD fluctuations.",
-        "Watch for breakout patterns on the 4h chart, key support at 2310."
-      ];
-
-      const index = Math.floor(Math.random() * messages.length);
-      document.getElementById("mensagem").innerText = messages[index];
+    async function updatePrice() {
+      try {
+        const res = await fetch(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=XAU&to_currency=USD&apikey=${apiKey}`);
+        const data = await res.json();
+        const price = data['Realtime Currency Exchange Rate']['5. Exchange Rate'];
+        document.getElementById("price").innerText = parseFloat(price).toFixed(2);
+      } catch (e) {
+        document.getElementById("price").innerText = "Error";
+      }
     }
 
-    // Market Open Alert (Tóquio, Londres, Nova York)
-    function marketAlert(time, market) {
+    function updateTrend() {
+      // Mock until IA is live
+      const options = ["Bullish", "Bearish", "Neutral"];
+      const choice = options[Math.floor(Math.random() * 3)];
+      document.getElementById("trend").innerText = choice;
+    }
+
+    function updateMacro() {
+      // Placeholder — IA will override later
+      document.getElementById("macro").innerText = "Awaiting FOMC speech";
+    }
+
+    function updateMarketStatus() {
       const now = new Date();
-      const targetTime = new Date(time);
-      const diff = targetTime - now;
-      
-      if (diff <= 0) {
-        document.getElementById("mensagem").innerText = `Market ${market} is now OPEN!`;
-        return;
-      }
+      const utcHour = now.getUTCHours();
 
-      const alertTimes = [15, 10, 5, 1];
-      for (let t of alertTimes) {
-        if (diff <= t * 60 * 1000) {
-          document.getElementById("mensagem").innerText = `Market ${market} will open in ${t} minute(s).`;
-        }
-      }
+      const isOpen = (start, end) => utcHour >= start && utcHour < end;
+      const status = [
+        `Tokyo: ${isOpen(0, 9) ? 'Open' : 'Closed'}`,
+        `London: ${isOpen(7, 16) ? 'Open' : 'Closed'}`,
+        `NY: ${isOpen(13, 22) ? 'Open' : 'Closed'}`
+      ];
+      document.getElementById("markets").innerText = status.join(" | ");
     }
 
-    function updateCountdown() {
-      marketAlert(marketTimes.london, "London");
-      marketAlert(marketTimes.tokyo, "Tokyo");
-      marketAlert(marketTimes.newYork, "New York");
+    function renderCalendar() {
+      const calendar = [
+        { time: "08:30", event: "US Non-Farm Payrolls", impact: "High" },
+        { time: "10:00", event: "ISM Services PMI", impact: "Medium" },
+        { time: "14:00", event: "FOMC Member Speech", impact: "High" }
+      ];
+      const container = document.getElementById("calendar");
+      container.innerHTML = "";
+      calendar.forEach(e => {
+        const div = document.createElement("div");
+        div.className = "calendar-item";
+        div.innerHTML = `<div>${e.time} - ${e.event}</div><div>${e.impact}</div>`;
+        container.appendChild(div);
+      });
     }
 
-    setInterval(updateCountdown, 1000);
-
-    // Automatically Add Alerts on TradingView Chart
-    function addAlertToChart(alertMessage, timeFrame) {
-      const chart = document.querySelector('iframe');
-      const tradingViewURL = chart.src;
-      const alertCode = `alert(${alertMessage})`;
-      
-      // This is where you would call TradingView's scripting capabilities
-      console.log(`Adding alert to TradingView Chart with message: "${alertMessage}" and on time frame: ${timeFrame}`);
-      
-      // The actual TradingView API integration would go here (not supported directly in iframe)
+    function updateAIComments() {
+      const comment = `Gold is reacting cautiously to the upcoming US Non-Farm Payrolls. Volatility expected.`;
+      document.getElementById("ai-comments").innerText = comment;
     }
 
-    // Run the AI message update every 5 minutes
-    updateMessage();
-    setInterval(updateMessage, 5 * 60 * 1000);
+    // Run all
+    updatePrice();
+    updateTrend();
+    updateMacro();
+    updateMarketStatus();
+    renderCalendar();
+    updateAIComments();
+
+    setInterval(updatePrice, 60000); // update every minute
+    setInterval(updateMarketStatus, 60000);
   </script>
-
 </body>
 </html>
