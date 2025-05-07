@@ -1,163 +1,89 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>XAUUSD Live Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XAUUSD 24H Smart Dashboard</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0e1117;
-      color: #ffffff;
+      font-family: Arial, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
     }
-    .header {
-      background-color: #161b22;
-      padding: 10px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      border-bottom: 1px solid #30363d;
-    }
-    .header div {
+    header {
+      background: #161b22;
+      padding: 1em;
       text-align: center;
-    }
-    .main {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    .card {
-      background-color: #1c2128;
-      padding: 15px;
-      border-radius: 8px;
-      border: 1px solid #30363d;
-    }
-    .calendar-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 8px 0;
+      font-size: 1.4em;
+      font-weight: bold;
       border-bottom: 1px solid #30363d;
     }
     iframe {
-      border-radius: 8px;
+      width: 100%;
+      height: 500px;
       border: none;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
+      padding: 1em;
+    }
+    .card {
+      background: #161b22;
+      padding: 1em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 0.5em;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      padding: 1em;
+      border-top: 1px solid #30363d;
+      background: #161b22;
+    }
+    .disclaimer {
+      color: #f85149;
+      font-size: 0.8em;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div>
-      <div><strong>Price</strong></div>
-      <div id="price">Loading...</div>
-    </div>
-    <div>
-      <div><strong>Trend</strong></div>
-      <div id="trend">Analyzing...</div>
-    </div>
-    <div>
-      <div><strong>Last Macro Event</strong></div>
-      <div id="macro">Loading...</div>
-    </div>
-    <div>
-      <div><strong>Market Status</strong></div>
-      <div id="markets">Checking...</div>
-    </div>
-  </div>
-
-  <div class="main">
+  <header>XAUUSD 24H Smart Dashboard</header>  <!-- TradingView Candle Chart -->  <iframe
+    src="https://s.tradingview.com/embed-widget/mini-symbol-overview/?symbol=OANDA:XAUUSD&width=100%&height=500&locale=en&dateRange=12M&colorTheme=dark&trendLineColor=rgba(41, 98, 255, 1)&underLineColor=rgba(41, 98, 255, 0.3)&isTransparent=false&autosize=true"
+    allowtransparency="true"
+    scrolling="no"
+  ></iframe>  <div class="container">
+    <!-- AI Assistant Box -->
     <div class="card">
-      <h2>Live XAUUSD Chart</h2>
-      <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_12345&symbol=OANDA:XAUUSD&interval=15&hidesidetoolbar=1&theme=dark&style=1&timezone=Etc/UTC&withdateranges=1&hideideas=1&studies=[]" width="100%" height="500" allowtransparency="true"></iframe>
+      <h2>AI Insights</h2>
+      <div id="ai-comments">Loading insights...</div>
+    </div><!-- Economic Calendar -->
+<div class="card">
+  <h2>Economic Calendar</h2>
+  <iframe src="https://sslecal2.investing.com?ecoDayBackground=%23161b22&columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone,tabs&countries=5,72,26,4,6,35&calType=day&timeZone=55&lang=1" width="100%" height="400" frameborder="0" allowtransparency="true"></iframe>
+</div>
+
+  </div>  <footer>
+    <div class="disclaimer">
+      This content is for educational purposes only. The author assumes no responsibility for any financial losses. Always do your own research before making any trades.
     </div>
-
-    <div class="card">
-      <h2>Today's Economic Calendar</h2>
-      <div id="calendar">
-        <div class="calendar-item"><div>Loading...</div></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <h2>AI Assistant Commentary</h2>
-      <div id="ai-comments">Waiting for live macroeconomic events...</div>
-    </div>
-  </div>
-
-  <script>
-    const apiKey = "063169H1FSHUHWA2";
-
-    async function updatePrice() {
-      try {
-        const res = await fetch(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=XAU&to_currency=USD&apikey=${apiKey}`);
-        const data = await res.json();
-        const price = data['Realtime Currency Exchange Rate']['5. Exchange Rate'];
-        document.getElementById("price").innerText = parseFloat(price).toFixed(2);
-      } catch (e) {
-        document.getElementById("price").innerText = "Error";
-      }
+  </footer>  <script>
+    async function fetchAlphaVantageNews() {
+      const response = await fetch("https://www.alphavantage.co/query?function=NEWS_SENTIMENT&tickers=GOLD&apikey=063169H1FSHUHWA2");
+      const data = await response.json();
+      const aiDiv = document.getElementById("ai-comments");
+      const headlines = data.feed?.slice(0, 5).map(news => `• ${news.title}`).join("<br>") || 'No relevant news at the moment.';
+      aiDiv.innerHTML = `Live Sentiment from Alpha Vantage:<br>${headlines}`;
     }
 
-    function updateTrend() {
-      // Mock until IA is live
-      const options = ["Bullish", "Bearish", "Neutral"];
-      const choice = options[Math.floor(Math.random() * 3)];
-      document.getElementById("trend").innerText = choice;
-    }
-
-    function updateMacro() {
-      // Placeholder — IA will override later
-      document.getElementById("macro").innerText = "Awaiting FOMC speech";
-    }
-
-    function updateMarketStatus() {
-      const now = new Date();
-      const utcHour = now.getUTCHours();
-
-      const isOpen = (start, end) => utcHour >= start && utcHour < end;
-      const status = [
-        `Tokyo: ${isOpen(0, 9) ? 'Open' : 'Closed'}`,
-        `London: ${isOpen(7, 16) ? 'Open' : 'Closed'}`,
-        `NY: ${isOpen(13, 22) ? 'Open' : 'Closed'}`
-      ];
-      document.getElementById("markets").innerText = status.join(" | ");
-    }
-
-    function renderCalendar() {
-      const calendar = [
-        { time: "08:30", event: "US Non-Farm Payrolls", impact: "High" },
-        { time: "10:00", event: "ISM Services PMI", impact: "Medium" },
-        { time: "14:00", event: "FOMC Member Speech", impact: "High" }
-      ];
-      const container = document.getElementById("calendar");
-      container.innerHTML = "";
-      calendar.forEach(e => {
-        const div = document.createElement("div");
-        div.className = "calendar-item";
-        div.innerHTML = `<div>${e.time} - ${e.event}</div><div>${e.impact}</div>`;
-        container.appendChild(div);
-      });
-    }
-
-    function updateAIComments() {
-      const comment = `Gold is reacting cautiously to the upcoming US Non-Farm Payrolls. Volatility expected.`;
-      document.getElementById("ai-comments").innerText = comment;
-    }
-
-    // Run all
-    updatePrice();
-    updateTrend();
-    updateMacro();
-    updateMarketStatus();
-    renderCalendar();
-    updateAIComments();
-
-    setInterval(updatePrice, 60000); // update every minute
-    setInterval(updateMarketStatus, 60000);
-  </script>
-</body>
+    fetchAlphaVantageNews();
+    setInterval(fetchAlphaVantageNews, 10 * 60 * 1000); // refresh every 10 minutes
+  </script></body>
 </html>
