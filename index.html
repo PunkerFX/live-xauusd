@@ -1,143 +1,120 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live XAUUSD Analysis</title>
-    <script src="https://unpkg.com/@tradingview/charting-library@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #tradingview_chart {
-            height: 600px;
-            width: 100%;
-            margin: 20px 0;
-        }
-        .ai-comments, .calendar, .alerts {
-            margin: 20px 0;
-        }
-        h3 {
-            color: #333;
-        }
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-    </style>
-</head>
-<body>
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XAUUSD 24h AI Dashboard</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #0e0e0e;
+      color: #f5f5f5;
+    }
+    .container {
+      padding: 1rem;
+      max-width: 1400px;
+      margin: auto;
+    }
+    .section {
+      background: #1e1e1e;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+    }
+    .section h2 {
+      margin-top: 0;
+      color: #ffd700;
+    }
+    .highlight-red { color: #ff4c4c; }
+    .highlight-yellow { color: #f5c542; }
+    .highlight-green { color: #4caf50; }
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+    }
+    .small-text {
+      font-size: 0.9em;
+      color: #ccc;
+    }
+    .inline-metric {
+      display: inline-block;
+      margin-right: 10px;
+    }
+  </style>
+</head><body>
+  <div class="container"><div class="section">
+  <h2>Live XAUUSD Chart (OANDA)</h2>
+  <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_123&symbol=OANDA:XAUUSD&interval=15&hidesidetoolbar=1&symboledit=1&saveimage=1&studies=[]&theme=dark&style=1&timezone=Etc/UTC&withdateranges=1&hideideas=1&toolbarbg=1e1e1e&studies_overrides={}&overrides={}&enabled_features=[]&disabled_features=[]"></iframe>
+</div>
 
-    <div id="tradingview_chart"></div>
-    <div id="ai_comments" class="ai-comments">
-        <h3>AI Insights</h3>
-        <p id="ai_analysis">Loading insights...</p>
-    </div>
-    <div id="economic_calendar" class="calendar">
-        <h3>Economic Calendar</h3>
-        <ul id="calendar_list"></ul>
-    </div>
-    <div id="alerts" class="alerts">
-        <h3>Alerts</h3>
-        <ul id="alert_list"></ul>
-    </div>
+<div class="section">
+  <h2>AI Insights</h2>
+  <div id="ai-insights">
+    Loading insights...
+  </div>
+</div>
 
-    <script>
-        // Configuração da API Alpha Vantage para XAUUSD
-        const ALPHA_VANTAGE_API_KEY = '063169H1FSHUHWA2';  // Substitua com sua chave da Alpha Vantage
-        const XAUUSD_URL = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=XAUUSD&interval=15min&apikey=${ALPHA_VANTAGE_API_KEY}`;
+<div class="section">
+  <h2>Economic Calendar</h2>
+  <div id="calendar">
+    Loading events...
+  </div>
+</div>
 
-        // Função para obter dados do XAUUSD e enviar para o TradingView
-        function getXAUUSDData() {
-            axios.get(XAUUSD_URL)
-                .then(response => {
-                    const data = response.data['Time Series (15min)'];
-                    updateChart(data);
-                })
-                .catch(error => {
-                    console.error("Error fetching data:", error);
-                });
-        }
+<div class="section">
+  <h2>Macro Correlations</h2>
+  <div id="correlations">
+    Loading market data...
+  </div>
+</div>
 
-        // Função para configurar o gráfico do TradingView
-        function updateChart(data) {
-            new TradingView.widget({
-                container_id: "tradingview_chart",
-                autosize: true,
-                symbol: "XAUUSD",
-                interval: "15",
-                timezone: "Etc/UTC",
-                theme: "light",
-                style: "1", // Candlestick chart
-                locale: "en",
-                toolbar_bg: "#f1f3f6",
-                studies: ["RSI", "MACD"],
-                overrides: {
-                    "volume.volumeColor.positive": "#00FF00",
-                    "volume.volumeColor.negative": "#FF0000",
-                }
-            });
+<div class="section">
+  <h2>Disclaimer</h2>
+  <p class="small-text">This dashboard is for educational purposes only. No financial advice is given. Trading involves risk.</p>
+</div>
 
-            // Exemplo de adicionar zonas de suporte e resistência diretamente no gráfico
-            const supportResistanceZones = [
-                { price: 1920, label: "Support Zone", color: "green" },
-                { price: 1950, label: "Resistance Zone", color: "red" }
-            ];
+  </div>  <script>
+    async function fetchAIInsights() {
+      const response = await fetch('https://raw.githubusercontent.com/PunkerFX/ai-xauusd-live/main/data/insights.json');
+      const data = await response.json();
+      document.getElementById('ai-insights').innerHTML = `
+        <p><strong>Sentiment:</strong> ${data.sentiment}</p>
+        <p><strong>Support:</strong> ${data.support}</p>
+        <p><strong>Resistance:</strong> ${data.resistance}</p>
+        <p><strong>Analysis:</strong> ${data.commentary}</p>
+        <p class="small-text">Updated: ${new Date(data.updated_at).toLocaleTimeString()}</p>
+      `;
+    }
 
-            supportResistanceZones.forEach(zone => {
-                // Adiciona linhas no gráfico do TradingView
-                // Este é um exemplo simples; você pode adicionar mais funcionalidades como price levels
-                console.log(`Adding ${zone.label} at ${zone.price}`);
-            });
-        }
+    async function fetchCalendar() {
+      const response = await fetch('https://raw.githubusercontent.com/PunkerFX/ai-xauusd-live/main/data/calendar.json');
+      const events = await response.json();
+      document.getElementById('calendar').innerHTML = events.map(ev => {
+        let impactClass = 'highlight-green';
+        if (ev.impact === 'High') impactClass = 'highlight-red';
+        else if (ev.impact === 'Medium') impactClass = 'highlight-yellow';
+        return `<div><span class="${impactClass}">${ev.time} — ${ev.country} — ${ev.title} (${ev.impact})</span></div>`;
+      }).join('');
+    }
 
-        // Função para obter os eventos econômicos e exibir
-        function getEconomicCalendar() {
-            const calendarUrl = "https://api.investing.com/api/marketdata/1.0/economic-calendar";  // URL da API para o calendário econômico
-            axios.get(calendarUrl)
-                .then(response => {
-                    const events = response.data.events;
-                    const eventList = document.getElementById("calendar_list");
-                    events.forEach(event => {
-                        const li = document.createElement("li");
-                        li.textContent = `${event.date} - ${event.event} - Impact: ${event.impact}`;
-                        eventList.appendChild(li);
-                    });
-                })
-                .catch(error => {
-                    console.error("Error fetching economic calendar:", error);
-                });
-        }
+    async function fetchCorrelations() {
+      const response = await fetch('https://raw.githubusercontent.com/PunkerFX/ai-xauusd-live/main/data/correlations.json');
+      const data = await response.json();
+      document.getElementById('correlations').innerHTML = `
+        <div class="inline-metric"><strong>DXY:</strong> ${data.dxy} (${data.dxy_trend})</div>
+        <div class="inline-metric"><strong>10Y Yield:</strong> ${data.t10y} (${data.t10y_trend})</div>
+        <div class="inline-metric"><strong>S&P500:</strong> ${data.sp500} (${data.sp500_trend})</div>
+      `;
+    }
 
-        // Função para exibir alertas baseados em notícias e dados econômicos
-        function displayAIInsights() {
-            const aiComments = document.getElementById("ai_analysis");
+    function refreshAll() {
+      fetchAIInsights();
+      fetchCalendar();
+      fetchCorrelations();
+    }
 
-            // Simulação de uma análise de AI
-            aiComments.textContent = "The current economic situation in the US suggests a potential price increase in XAUUSD as inflation rates remain high. Watch for resistance at $1950 and support at $1920.";
-        }
-
-        // Função para alertar sobre eventos de mercado
-        function setAlerts() {
-            const alertList = document.getElementById("alert_list");
-
-            const alert = document.createElement("li");
-            alert.textContent = "Alert: US GDP Report in 1 hour. This could impact XAUUSD.";
-            alertList.appendChild(alert);
-        }
-
-        // Iniciar todas as funções
-        function init() {
-            getXAUUSDData();
-            getEconomicCalendar();
-            displayAIInsights();
-            setAlerts();
-        }
-
-        // Chamar a função de inicialização
-        init();
-    </script>
-
-</body>
+    refreshAll();
+    setInterval(refreshAll, 15 * 60 * 1000); // Atualiza a cada 15 minutos
+  </script></body>
 </html>
